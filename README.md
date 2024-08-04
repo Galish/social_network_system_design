@@ -1,5 +1,7 @@
 # Social network for travelers - System Design
 
+System design of a social network for travelers for the [system design course](https://balun.courses/courses/system_design).
+
 ### Functional requirements:
 - Publish posts containing photos, description and location
 - Like and comment on user posts
