@@ -21,9 +21,12 @@ System design of a social network for travelers for the [system design course](h
 	- user reacts to 15 posts per day (50% of viewed posts)
 	- user posts 6 comments per day (20% of viewed posts)
 - Audience from Russian-speaking countries
-- No seasonality
-- No service operation time limit
-- Maximum number of users to follow is 1000
+- There is seasonality is present
+- Operation time limits:
+	- feed rendering should take less than 1 second
+	- post and comment publishing should take less than 1 second
+	- location search should take less than 3 seconds
+- Maximum number of users to follow is 10000
 - Availability 99,99%
 
 
