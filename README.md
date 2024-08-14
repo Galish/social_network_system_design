@@ -15,7 +15,7 @@ System design of a social network for travelers for the [system design course](h
 
 - 10 000 000 DAU
 - Behavior:
-	- user follows 200 other users
+	- user is subscribed to 200 other users at any given time
 	- user publishes 5 posts per month
 	- user views 30 post per day
 	- user reacts to 15 posts per day (50% of viewed posts)
