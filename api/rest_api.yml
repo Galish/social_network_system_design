@@ -180,6 +180,79 @@ paths:
           description: Not found
         500:
           description: Server error
+    delete:
+      summary: Delete a post
+      description: Allows a user to delete a post.
+      tags:
+        - Posts
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        500:
+          description: Server error
+    post:
+      summary: Publish a post
+      description: Allows a user to add a comment to the post.
+      tags:
+        - Posts
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: Unique post identifier.
+                text:
+                  type: string
+                  description: The content of the comment.
+                created_by:
+                  type: string
+                  format: uuid
+                  description: Unique user identifier.
+                location_id:
+                  type: string
+                  format: uuid
+                  description: Unique location identifier.
+                media:
+                  type: array
+                  items:
+                   $ref: '#/components/schemas/Media'
+              required:
+                - id
+                - text
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        404:
+          description: Not found
+        500:
+          description: Server error
   /users/{user_id}/posts:
     get:
       summary: View user posts
@@ -225,83 +298,6 @@ paths:
                   offset:
                     type: integer
                     description: The (zero-based) offset of the first item returned in the collection.
-        404:
-          description: Not found
-        500:
-          description: Server error
-    post:
-      summary: Publish a post
-      description: Allows a user to add a comment to the post.
-      tags:
-        - Posts
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          description: Unique user identifier.
-          schema:
-            type : string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: string
-                  format: uuid
-                  description: Unique post identifier.
-                text:
-                  type: string
-                  description: The content of the comment.
-                location_id:
-                  type: string
-                  format: uuid
-                  description: Unique location identifier.
-                media:
-                  type: array
-                  items:
-                   $ref: '#/components/schemas/Media'
-              required:
-                - id
-                - text
-      responses:
-        200:
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Post'
-        404:
-          description: Not found
-        500:
-          description: Server error
-  /users/{user_id}/posts/{post_id}:
-    delete:
-      summary: Delete a post
-      description: Allows a user to delete a post.
-      tags:
-        - Posts
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          description: Unique user identifier.
-          schema:
-            type : string
-            format: uuid
-        - name: post_id
-          in: path
-          required: true
-          description: Unique post identifier.
-          schema:
-            type : string
-            format: uuid
-      responses:
-        200:
-          description: Ok
         404:
           description: Not found
         500:
@@ -404,17 +400,17 @@ paths:
           description: Not found
         500:
           description: Server error
-  /users/{user_id}/likes:
+  /posts/{post_id}/likes:
     post:
       summary: Like the post
       description: Allows a user to like the post.
       tags:
         - Likes
       parameters:
-        - name: user_id
+        - name: post_id
           in: path
           required: true
-          description: Unique user identifier.
+          description: Unique post identifier.
           schema:
             type : string
             format: uuid
@@ -429,6 +425,10 @@ paths:
                   type: string
                   format: uuid
                   description: Unique post identifier.
+                created_by:
+                  type: string
+                  format: uuid
+                  description: Unique user identifier.
               required:
                 - post_id
       responses:
@@ -438,17 +438,17 @@ paths:
           description: Not found
         500:
           description: Server error
-  /users/{user_id}/likes/{like_id}:
+  /posts/{post_id}/likes/{like_id}:
     delete:
       summary: Unlike the post
       description: Allows a user to unlike the post.
       tags:
         - Likes
       parameters:
-        - name: user_id
+        - name: post_id
           in: path
           required: true
-          description: Unique user identifier.
+          description: Unique post identifier.
           schema:
             type : string
             format: uuid
@@ -515,17 +515,16 @@ paths:
           description: Not found
         500:
           description: Server error
-  /users/{user_id}/comments:
     post:
       summary: Add a comment to the post
       description: Allows a user to add a comment to the post.
       tags:
         - Comments
       parameters:
-        - name: user_id
+        - name: post_id
           in: path
           required: true
-          description: Unique user identifier.
+          description: Unique post identifier.
           schema:
             type : string
             format: uuid
@@ -540,6 +539,10 @@ paths:
                   type: string
                   format: uuid
                   description: Unique post identifier.
+                created_by:
+                  type: string
+                  format: uuid
+                  description: Unique user identifier.
                 text:
                   type: string
                   description: The content of the comment.
@@ -557,17 +560,17 @@ paths:
           description: Not found
         500:
           description: Server error
-  /users/{user_id}/comments/{comment_id}:
+  /posts/{post_id}/comments/{comment_id}:
     delete:
       summary: Delete comment to post
       description: Allows a user to delete a comment to the post.
       tags:
         - Comments
       parameters:
-        - name: user_id
+        - name: post_id
           in: path
           required: true
-          description: Unique user identifier.
+          description: Unique post identifier.
           schema:
             type : string
             format: uuid
