@@ -40,13 +40,51 @@ Posts:
 	Traffic (write) = 25 MB (text + pictures) * 20 = 500 MB/s
 	Traffic (read) = 5 MB (text + preview) * 3 500 = 17.5 GB/s
 
-Reactions:
+	Storage:
+
+	Required (per year) = 500 MB/s * 86 400 * 365 ~= 16 PB
+
+	SSD (SATA) = 160 disks
+	- by capacity = 16 PB / 100 TB = 160
+	- by throughput = 17500 / 500 MB/s = 35
+	- by IOPS = 3 500 / 1000 = 4
+
+	SSD (nVME) = 533 disks
+	- by capacity = 16 PB / 30 TB = 533
+	- by throughput = 17.5 / 3 GB/s = 6
+	- by IOPS = 3 500 / 10000 = 1
+
+	HDD = 500 disks
+	- by capacity = 16 PB / 32 TB = 500
+	- by throughput = 17500 / 100 MB/s = 175
+	- by IOPS = 3 500 / 100 = 35
+
+Likes:
 
 	RPS (write) = 10 000 000 * 15 / 86 400 ~= 1 800
 	RPS (read) = 10 000 000 * 30 * 50 (likes per post) / 86 400 ~= 180 000
 
 	Traffic (write) = 100 B * 1 800 = 180 KB/s
 	Traffic (read) = 100 B * 180 000 = 18 MB/s
+
+	Storage:
+
+	Required (per year) = 180 KB/s * 86 400 * 365 ~= 6 TB
+
+	SSD (nVME) = 18 disks
+	- by capacity = 6 TB = 1
+	- by throughput = 18 MB/s = 1
+	- by IOPS = 180 000 / 10 000 = 18
+
+	SSD (SATA) = 180 disks
+	- by capacity = 6 TB = 1
+	- by throughput = 18 MB/s = 1
+	- by IOPS = 180 000 / 1 000 = 180
+
+	HDD = 1800 disks
+	- by capacity = 6 TB = 1
+	- by throughput = 18 MB/s = 1
+	- by IOPS = 180 000 / 100 = 1800
 
 Comments:
 
@@ -56,5 +94,23 @@ Comments:
 	Traffic (write) = 500 B * 700 = 350 KB/s
 	Traffic (read) = 500 B * 35 000 = 17.5 MB/s
 
+	Storage:
+
+	Required (per year) = 350 KB/s * 86 400 * 365 ~= 12 TB
+
+	SSD (nVME) = 4 disks
+	- by capacity = 12 TB = 1
+	- by throughput = 17.5 MB/s = 1
+	- by IOPS = 35 000/ 10 000 = 4
+
+	SSD (SATA) = 35 disks
+	- by capacity = 12 TB = 1
+	- by throughput = 17.5 MB/s = 1
+	- by IOPS = 35 000/ 1 000 = 35
+
+	HDD = 350 disks
+	- by capacity = 12 TB = 1
+	- by throughput = 17.5 MB/s = 1
+	- by IOPS = 35 000 / 100 = 350
 
 
