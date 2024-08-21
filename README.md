@@ -42,17 +42,18 @@ Posts:
 
 	Storage:
 
-	Required (per year) = 500 MB/s * 86 400 * 365 ~= 16 PB
-
-	SSD (SATA) = 160 disks
-	- by capacity = 16 PB / 100 TB = 160
-	- by throughput = 17500 / 500 MB/s = 35
-	- by IOPS = 3 500 / 1000 = 4
+	Data generated (in 1 year) = 500 MB/s * 86 400 * 365 ~= 16 PB
+	Configuration: 160 SSD (SATA) disks
 
 	SSD (nVME) = 533 disks
 	- by capacity = 16 PB / 30 TB = 533
 	- by throughput = 17.5 / 3 GB/s = 6
 	- by IOPS = 3 500 / 10000 = 1
+
+	SSD (SATA) = 160 disks
+	- by capacity = 16 PB / 100 TB = 160
+	- by throughput = 17500 / 500 MB/s = 35
+	- by IOPS = 3 500 / 1000 = 4
 
 	HDD = 500 disks
 	- by capacity = 16 PB / 32 TB = 500
@@ -69,7 +70,8 @@ Likes:
 
 	Storage:
 
-	Required (per year) = 180 KB/s * 86 400 * 365 ~= 6 TB
+	Data generated (in 1 year) = 180 KB/s * 86 400 * 365 ~= 6 TB
+	Configuration: 18 SSD (nVME) disks
 
 	SSD (nVME) = 18 disks
 	- by capacity = 6 TB = 1
@@ -96,7 +98,8 @@ Comments:
 
 	Storage:
 
-	Required (per year) = 350 KB/s * 86 400 * 365 ~= 12 TB
+	Data generated (in 1 year) = 350 KB/s * 86 400 * 365 ~= 12 TB
+	Configuration: 4 SSD (nVME) disks
 
 	SSD (nVME) = 4 disks
 	- by capacity = 12 TB = 1
