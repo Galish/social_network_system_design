@@ -1,0 +1,866 @@
+openapi: 3.0.0
+
+info:
+  title: Social Network API
+  description: Current API describes interaction with Social Network
+  version: 1.0.0
+
+tags:
+  - name: User
+    description: Everything related to the user
+  - name: Posts
+    description: Everything related to the posts
+  - name: Follows
+    description: Everything related to user subscriptions
+  - name: Comments
+    description: Everything related to the comments
+  - name: Likes
+    description: Everything related to the likes
+  - name: Locations
+    description: Everything related to the locations
+  - name: Media
+    description: Everything related to the media
+
+paths:
+  /users/{user_id}:
+    get:
+      summary: View user profile
+      description: Returns information about the user specified by the requested ID.
+      tags:
+        - User
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique user identifier.
+          schema:
+            type : string
+            format: uuid
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /users/{user_id}/following:
+    get:
+      summary: View users the user is following
+      description: Returns a list of users the specified user ID is following.
+      tags:
+        - Follows
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique user identifier.
+          schema:
+            type : string
+            format: uuid
+        - name: limit
+          in: query
+          description: The maximum number of entries to return.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The (zero-based) offset of the first item returned in the collection.
+          schema:
+            type : integer
+
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  count:
+                    type: integer
+                    description: The total number of entries found.
+                  limit:
+                    type: integer
+                    description: The maximum number of entries to return.
+                  offset:
+                    type: integer
+                    description: The (zero-based) offset of the first item returned in the collection.
+        404:
+          description: Not found
+        500:
+          description: Server error
+    post:
+      summary: Follow user
+      description: Allows a user to follow another user.
+      tags:
+        - Follows
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user who you would like to initiate the follow.
+          schema:
+            type : string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target_user_id:
+                  type: string
+                  format: uuid
+                  description: Unique identifier of the user that you would like the `user_id` to follow.
+              required:
+                - user_id
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /users/{user_id}/following/{target_user_id}:
+    delete:
+      summary: Unfollow user
+      description: Allows a user to unfollow another user.
+      tags:
+        - Follows
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user who you would like to initiate the unfollow.
+          schema:
+            type : string
+        - name: target_user_id
+          in: path
+          required: true
+          description: Unique identifier of the user that you would like the `user_id` to unfollow..
+          schema:
+            type : string
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /posts/{post_id}:
+    get:
+      summary: View a specific post
+      description: Returns information about a single post specified by the requested ID.
+      tags:
+        - Posts
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Post'
+        404:
+          description: Not found
+        500:
+          description: Server error
+    delete:
+      summary: Delete a post
+      description: Allows a user to delete a post.
+      tags:
+        - Posts
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        500:
+          description: Server error
+    post:
+      summary: Publish a post
+      description: Allows a user to add a comment to the post.
+      tags:
+        - Posts
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: Unique post identifier.
+                text:
+                  type: string
+                  description: The content of the comment.
+                created_by:
+                  type: string
+                  format: uuid
+                  description: Unique user identifier.
+                location_id:
+                  type: string
+                  format: uuid
+                  description: Unique location identifier.
+                media:
+                  type: array
+                  items:
+                   $ref: '#/components/schemas/Media'
+              required:
+                - id
+                - text
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /users/{user_id}/posts:
+    get:
+      summary: View user posts
+      description: Returns a list of posts created by the specified user in reverse chronological order.
+      tags:
+        - Posts
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique user identifier.
+          schema:
+            type : string
+            format: uuid
+        - name: limit
+          in: query
+          description: The maximum number of entries to return.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The (zero-based) offset of the first item returned in the collection.
+          schema:
+            type : integer
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  count:
+                    type: integer
+                    description: The total number of entries found.
+                  limit:
+                    type: integer
+                    description: The maximum number of entries to return.
+                  offset:
+                    type: integer
+                    description: The (zero-based) offset of the first item returned in the collection.
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /users/{user_id}/feed:
+    get:
+      summary: View user home feed
+      description: Returns a list of posts created by users that the user is subscribed to, in reverse chronological order..
+      tags:
+        - Posts
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique user identifier.
+          schema:
+            type : string
+            format: uuid
+        - name: limit
+          in: query
+          description: The maximum number of entries to return.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The (zero-based) offset of the first item returned in the collection.
+          schema:
+            type : integer
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  count:
+                    type: integer
+                    description: The total number of entries found.
+                  limit:
+                    type: integer
+                    description: The maximum number of entries to return.
+                  offset:
+                    type: integer
+                    description: The (zero-based) offset of the first item returned in the collection.
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /locations/{location_id}/posts:
+    get:
+      summary: View location posts
+      description: Returns a list of posts attached to the specified location.
+      tags:
+        - Posts
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          description: Unique location identifier.
+          schema:
+            type : string
+            format: uuid
+        - name: limit
+          in: query
+          description: The maximum number of entries to return.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The (zero-based) offset of the first item returned in the collection.
+          schema:
+            type : integer
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  count:
+                    type: integer
+                    description: The total number of entries found.
+                  limit:
+                    type: integer
+                    description: The maximum number of entries to return.
+                  offset:
+                    type: integer
+                    description: The (zero-based) offset of the first item returned in the collection.
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /posts/{post_id}/likes:
+    post:
+      summary: Like the post
+      description: Allows a user to like the post.
+      tags:
+        - Likes
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                post_id:
+                  type: string
+                  format: uuid
+                  description: Unique post identifier.
+                created_by:
+                  type: string
+                  format: uuid
+                  description: Unique user identifier.
+              required:
+                - post_id
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /posts/{post_id}/likes/{like_id}:
+    delete:
+      summary: Unlike the post
+      description: Allows a user to unlike the post.
+      tags:
+        - Likes
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+        - name: like_id
+          in: path
+          required: true
+          description: Unique like identifier.
+          schema:
+            type : string
+            format: uuid
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /posts/{post_id}/comments:
+    get:
+      summary: View post comments
+      description: Returns a list of comments added to a post.
+      tags:
+        - Comments
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+        - name: limit
+          in: query
+          description: The maximum number of entries to return.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The (zero-based) offset of the first item returned in the collection.
+          schema:
+            type : integer
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comment'
+                  count:
+                    type: integer
+                    description: The total number of entries found.
+                  limit:
+                    type: integer
+                    description: The maximum number of entries to return.
+                  offset:
+                    type: integer
+                    description: The (zero-based) offset of the first item returned in the collection.
+        404:
+          description: Not found
+        500:
+          description: Server error
+    post:
+      summary: Add a comment to the post
+      description: Allows a user to add a comment to the post.
+      tags:
+        - Comments
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                post_id:
+                  type: string
+                  format: uuid
+                  description: Unique post identifier.
+                created_by:
+                  type: string
+                  format: uuid
+                  description: Unique user identifier.
+                text:
+                  type: string
+                  description: The content of the comment.
+              required:
+                - post_id
+                - text
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /posts/{post_id}/comments/{comment_id}:
+    delete:
+      summary: Delete comment to post
+      description: Allows a user to delete a comment to the post.
+      tags:
+        - Comments
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unique post identifier.
+          schema:
+            type : string
+            format: uuid
+        - name: comment_id
+          in: path
+          required: true
+          description: Unique comment identifier.
+          schema:
+            type : string
+            format: uuid
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /locations/{location_id}:
+    get:
+      summary: View a specific location
+      description: Returns information about a single location specified by the requested ID.
+      tags:
+        - Locations
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          description: Unique location identifier.
+          schema:
+            type : string
+            format: uuid
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Location'
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /locations/search:
+    get:
+      summary: Search for location
+      description: Returns a list of locations.
+      tags:
+        - Locations
+      parameters:
+        - name: query
+          in: query
+          description: Query for matching location name and description.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: The maximum number of entries to return.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The (zero-based) offset of the first item returned in the collection.
+          schema:
+            type : integer
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Location'
+                  count:
+                    type: integer
+                    description: The total number of entries found.
+                  limit:
+                    type: integer
+                    description: The maximum number of entries to return.
+                  offset:
+                    type: integer
+                    description: The (zero-based) offset of the first item returned in the collection.
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /media/{media_id}:
+    get:
+      summary: Download a file.
+      description: Allows a user to download a media file.
+      tags:
+        - Media
+      parameters:
+        - name: media_id
+          in: path
+          required: true
+          description: Unique file identifier.
+          schema:
+            type : string
+            format: uuid
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        404:
+          description: Not found
+        500:
+          description: Server error
+  /media/upload:
+    post:
+      summary: Upload a file.
+      description: Allows a user to upload a media file.
+      tags:
+        - Media
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                    description: Name of the file.
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+        404:
+          description: Not found
+        500:
+          description: Server error
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique user identifier.
+        username:
+          type: string
+          description: Screen name of the user.
+        name:
+          type: string
+          description: Friendly name of the user, as shown on their profile.
+        description:
+          type: string
+          description: The text of this user's profile description.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date of the account.
+        location:
+          type: string
+          description: The location specified in the user's profile.
+        following_count:
+          type: integer
+          description: Number of users this user is following.
+        followers_count:
+          type: integer
+          description: Number of users who follow this user.
+    Post:
+      type: object
+      required:
+        - id
+        - username
+        - text
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique post identifier.
+        text:
+          type: string
+          description: The content of the post.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date of the post.
+        created_by:
+          type: string
+          format: uuid
+          description: Unique user identifier.
+        likes_count:
+          type: integer
+          description: Number of users who liked the post.
+        comments_count:
+          type: integer
+          description: Number of comments added to the post.
+        location_id:
+          type: string
+          format: uuid
+          description: Unique location identifier.
+        media:
+          type: array
+          items:
+           $ref: '#/components/schemas/Media'
+    Comment:
+      type: object
+      required:
+        - id
+        - post_id
+        - text
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique comment identifier.
+        post_id:
+          type: string
+          format: uuid
+          description: Unique post identifier.
+        text:
+          type: string
+          description: The content of the comment.
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date of the comment.
+        created_by:
+          type: string
+          format: uuid
+          description: Unique user identifier.
+        likes_count:
+          type: integer
+          description: Number of users who liked the comment.
+    Location:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique location identifier.
+        name:
+          type: string
+          description: Location name.
+        description:
+          type: string
+          description: Location description.
+        coordinates:
+          type: object
+          description: Location coordinates.
+          properties:
+            lat:
+              type: number
+              format: float
+            lon:
+              type: number
+              format: float
+    Media:
+      type: object
+      required:
+        - id
+        - url
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique file identifier.
+        url:
+          type: string
+          description: Unique file identifier.
+        format:
+          type: string
+          description: The format of the file.
+        size:
+          type: number
+          format: float
+          description: The size of the file.
