@@ -40,10 +40,9 @@ Posts:
 	Traffic (write) = 25 MB (text + pictures) * 20 = 500 MB/s
 	Traffic (read) = 5 MB (text + preview) * 3 500 = 17.5 GB/s
 
-	Storage:
+	Storage: 160 SSD (SATA) disks
 
 	Data generated (in 1 year) = 500 MB/s * 86 400 * 365 ~= 16 PB
-	Configuration: 160 SSD (SATA) disks
 
 	SSD (nVME) = 533 disks
 	- by capacity = 16 PB / 30 TB = 533
@@ -60,6 +59,13 @@ Posts:
 	- by throughput = 17500 / 100 MB/s = 175
 	- by IOPS = 3 500 / 100 = 35
 
+
+	Hosts: 80 shards (2 disks) * 3 replicas = 240
+
+	Configuration:
+	- sharding by `user_id` (key based)
+	- replication master-slave, async, RF=3
+
 Likes:
 
 	RPS (write) = 10 000 000 * 15 / 86 400 ~= 1 800
@@ -68,10 +74,9 @@ Likes:
 	Traffic (write) = 100 B * 1 800 = 180 KB/s
 	Traffic (read) = 100 B * 180 000 = 18 MB/s
 
-	Storage:
+	Storage: 18 SSD (nVME) disks
 
 	Data generated (in 1 year) = 180 KB/s * 86 400 * 365 ~= 6 TB
-	Configuration: 18 SSD (nVME) disks
 
 	SSD (nVME) = 18 disks
 	- by capacity = 6 TB = 1
@@ -88,6 +93,13 @@ Likes:
 	- by throughput = 18 MB/s = 1
 	- by IOPS = 180 000 / 100 = 1800
 
+
+	Hosts: 9 shards (2 disks) * 3 replicas = 27
+
+	Configuration:
+	- sharding by `post_id` (key based)
+	- replication master-slave, async, RF=3
+
 Comments:
 
 	RPS (write) = 10 000 000 * 6 / 86 400 ~= 700
@@ -96,10 +108,10 @@ Comments:
 	Traffic (write) = 500 B * 700 = 350 KB/s
 	Traffic (read) = 500 B * 35 000 = 17.5 MB/s
 
-	Storage:
+
+	Storage: 4 SSD (nVME) disks
 
 	Data generated (in 1 year) = 350 KB/s * 86 400 * 365 ~= 12 TB
-	Configuration: 4 SSD (nVME) disks
 
 	SSD (nVME) = 4 disks
 	- by capacity = 12 TB = 1
@@ -116,4 +128,10 @@ Comments:
 	- by throughput = 17.5 MB/s = 1
 	- by IOPS = 35 000 / 100 = 350
 
+
+	Hosts: 2 shards (2 disks) * 3 replicas = 6
+
+	Configuration:
+	- sharding by `post_id` (key based)
+	- replication master-slave, async, RF=3
 
